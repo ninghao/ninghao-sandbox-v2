@@ -119,8 +119,8 @@ class CheckoutController {
     return view.render('commerce.checkout', { qrcodeUrl })
   }
 
-  wxPayNotify () {
-
+  wxPayNotify ({ request }) {
+    logger.debug(request)
   }
 }
 
