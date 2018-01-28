@@ -11,6 +11,28 @@ const axios        = use('axios')
 const qrcode       = use('qrcode')
 
 class CheckoutController {
+  wxPaySign (data, key) {
+    // 1. 排序
+    const sortedOrder = Object.keys(data).sort().reduce((accumulator, key) => {
+      accumulator[key] = data[key]
+      // logger.debug(accumulator)
+      return accumulator
+    }, {})
+
+    // 2. 转换成地址查询符
+    const stringOrder = queryString.stringify(sortedOrder, null, null, {
+      encodeURIComponent: queryString.unescape
+    })
+
+    // 3. 结尾加上密钥
+    const stringOrderWithKey = `${ stringOrder }&key=${ key }`
+
+    // 4. md5 后全部大写
+    const sign = crypto.createHash('md5').update(stringOrderWithKey).digest('hex').toUpperCase()
+
+    return sign
+  }
+
   async render ({ view }) {
     // 公众账号 ID
     const appid = Config.get('wxpay.appid')
@@ -57,23 +79,7 @@ class CheckoutController {
       nonce_str
     }
 
-    // 1. 排序
-    const sortedOrder = Object.keys(order).sort().reduce((accumulator, key) => {
-      accumulator[key] = order[key]
-      // logger.debug(accumulator)
-      return accumulator
-    }, {})
-
-    // 2. 转换成地址查询符
-    const stringOrder = queryString.stringify(sortedOrder, null, null, {
-      encodeURIComponent: queryString.unescape
-    })
-
-    // 3. 结尾加上密钥
-    const stringOrderWithKey = `${ stringOrder }&key=${ key }`
-
-    // 4. md5 后全部大写
-    const sign = crypto.createHash('md5').update(stringOrderWithKey).digest('hex').toUpperCase()
+    const sign = this.wxPaySign(order, key)
 
     order = {
       xml: {
@@ -120,7 +126,37 @@ class CheckoutController {
   }
 
   wxPayNotify ({ request }) {
-    logger.debug(request)
+    // logger.debug(request)
+    const _payment = convert.xml2js(request._raw, {
+      compact: true,
+      cdataKey: 'value',
+      textKey: 'value'
+    }).xml
+
+    const payment = Object.keys(_payment).reduce((accumulator, key) => {
+      accumulator[key] = _payment[key].value
+      return accumulator
+    }, {})
+
+    const paymentSign = payment.sign
+
+    delete payment['sign']
+
+    const key = Config.get('wxpay.key')
+
+    const selfSign = this.wxPaySign(payment, key)
+
+    const return_code = paymentSign === selfSign ? 'SUCCESS' : 'FAIL'
+
+    const reply = {
+      xml: {
+        return_code
+      }
+    }
+
+    return convert.js2xml(reply, {
+      compact: true
+    })
   }
 }
 
