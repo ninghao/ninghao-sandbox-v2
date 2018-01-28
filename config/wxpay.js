@@ -13,5 +13,10 @@ module.exports = {
   key: Env.get('WXPAY_KEY'),
 
   // 通知地址
-  notify_url: Env.get('WXPAY_NOTIFY_URL')
+  notify_url: Env.get('WXPAY_NOTIFY_URL'),
+
+  // 接口地址
+  api: {
+    unifiedorder: 'https://api.mch.weixin.qq.com/pay/unifiedorder'
+  }
 }

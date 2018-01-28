@@ -7,9 +7,10 @@ const randomString = use('randomstring')
 const queryString  = use('querystring')
 const crypto       = use('crypto')
 const convert      = use('xml-js')
+const axios        = use('axios')
 
 class CheckoutController {
-  render ({ view }) {
+  async render ({ view }) {
     // 公众账号 ID
     const appid = Config.get('wxpay.appid')
 
@@ -40,12 +41,16 @@ class CheckoutController {
     // 随机字符
     const nonce_str = randomString.generate(32)
 
+    // 统一下单接口
+    const unifiedOrderApi = Config.get('wxpay.api.unifiedorder')
+
     let order = {
       appid,
       mch_id,
       out_trade_no,
       body,
       total_fee,
+      trade_type,
       product_id,
       notify_url,
       nonce_str
@@ -81,7 +86,11 @@ class CheckoutController {
       compact: true
     })
 
-    logger.debug(xmlOrder)
+    const wxPayResponse = await axios.post(unifiedOrderApi, xmlOrder)
+
+    logger.info('预支付响应：', wxPayResponse)
+
+    // logger.debug(xmlOrder)
 
     // logger.info('签名：', sign)
 
