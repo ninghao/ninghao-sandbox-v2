@@ -8,6 +8,7 @@ const queryString  = use('querystring')
 const crypto       = use('crypto')
 const convert      = use('xml-js')
 const axios        = use('axios')
+const qrcode       = use('qrcode')
 
 class CheckoutController {
   async render ({ view }) {
@@ -100,6 +101,9 @@ class CheckoutController {
       return accumulator
     }, {})
 
+    // 生成二维码链接
+    const qrcodeUrl = await qrcode.toDataURL(prepay.code_url, { width: 300 })
+
     // logger.debug(prepay)
 
     // logger.info('预支付响应：', wxPayResponse)
@@ -112,7 +116,7 @@ class CheckoutController {
 
     // logger.debug(sortedOrder)
 
-    return view.render('commerce.checkout')
+    return view.render('commerce.checkout', { qrcodeUrl })
   }
 
   wxPayNotify () {
