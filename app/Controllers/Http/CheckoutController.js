@@ -4,6 +4,7 @@ const logger       = use('App/Services/Logger')
 const Config       = use('Config')
 const moment       = use('moment')
 const randomString = use('randomstring')
+const queryString  = use('querystring')
 
 class CheckoutController {
   render ({ view }) {
@@ -51,9 +52,16 @@ class CheckoutController {
     // 1. 排序
     const sortedOrder = Object.keys(order).sort().reduce((accumulator, key) => {
       accumulator[key] = order[key]
-      logger.debug(accumulator)
+      // logger.debug(accumulator)
       return accumulator
     }, {})
+
+    // 转换成地址查询符
+    const stringOrder = queryString.stringify(sortedOrder, null, null, {
+      encodeURIComponent: queryString.unescape
+    })
+
+    // logger.debug(stringOrder)
 
     // logger.debug(sortedOrder)
 
