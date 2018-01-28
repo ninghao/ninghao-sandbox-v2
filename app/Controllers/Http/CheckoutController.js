@@ -5,6 +5,7 @@ const Config       = use('Config')
 const moment       = use('moment')
 const randomString = use('randomstring')
 const queryString  = use('querystring')
+const crypto       = use('crypto')
 
 class CheckoutController {
   render ({ view }) {
@@ -63,6 +64,11 @@ class CheckoutController {
 
     // 3. 结尾加上密钥
     const stringOrderWithKey = `${ stringOrder }&key=${ key }`
+
+    // 4. md5 后全部大写
+    const sign = crypto.createHash('md5').update(stringOrderWithKey).digest('hex').toUpperCase()
+
+    logger.info('签名：', sign)
 
     // logger.debug(stringOrder)
 
