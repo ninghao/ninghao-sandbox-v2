@@ -126,6 +126,9 @@ class CheckoutController {
   }
 
   wxPayNotify ({ request }) {
+    logger.warn('---------------------------------------------------')
+    logger.info(request)
+
     // logger.debug(request)
     const _payment = convert.xml2js(request._raw, {
       compact: true,
@@ -138,7 +141,11 @@ class CheckoutController {
       return accumulator
     }, {})
 
+    logger.info('支付结果：', payment)
+
     const paymentSign = payment.sign
+
+    logger.info('结果签名：', paymentSign)
 
     delete payment['sign']
 
@@ -146,7 +153,11 @@ class CheckoutController {
 
     const selfSign = this.wxPaySign(payment, key)
 
+    logger.info('自制签名：', selfSign)
+
     const return_code = paymentSign === selfSign ? 'SUCCESS' : 'FAIL'
+
+    logger.debug('回复代码：', return_code)
 
     const reply = {
       xml: {
