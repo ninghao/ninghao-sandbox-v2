@@ -11,4 +11,7 @@ module.exports = {
 
   // 密钥
   key: Env.get('WXPAY_KEY')
+
+  // 通知地址
+  notify_url: Env.get('WXPAY_NOTIFY_URL')
 }

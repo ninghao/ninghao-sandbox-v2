@@ -30,7 +30,14 @@ class CheckoutController {
     // 商品 ID
     const product_id = 1
 
+    // 通知地址
+    const notify_url = Config.get('wxpay.notify_url')
+
     return view.render('commerce.checkout')
+  }
+
+  wxPayNotify () {
+
   }
 }
 
