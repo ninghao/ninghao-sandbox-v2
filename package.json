@@ -25,7 +25,8 @@
     "@adonisjs/ignitor": "^1.0.14",
     "@adonisjs/lucid": "^4.0.24",
     "@adonisjs/session": "^1.0.19",
-    "@adonisjs/shield": "^1.0.4"
+    "@adonisjs/shield": "^1.0.4",
+    "log4js": "^2.5.2"
   },
   "devDependencies": {},
   "autoload": {
