@@ -48,6 +48,15 @@ class CheckoutController {
       nonce_str
     }
 
+    // 1. 排序
+    const sortedOrder = Object.keys(order).sort().reduce((accumulator, key) => {
+      accumulator[key] = order[key]
+      logger.debug(accumulator)
+      return accumulator
+    }, {})
+
+    // logger.debug(sortedOrder)
+
     return view.render('commerce.checkout')
   }
 

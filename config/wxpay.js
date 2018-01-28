@@ -10,7 +10,7 @@ module.exports = {
   mch_id: Env.get('WXPAY_MCH_ID'),
 
   // 密钥
-  key: Env.get('WXPAY_KEY')
+  key: Env.get('WXPAY_KEY'),
 
   // 通知地址
   notify_url: Env.get('WXPAY_NOTIFY_URL')
