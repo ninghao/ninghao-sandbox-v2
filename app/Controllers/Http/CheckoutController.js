@@ -86,9 +86,23 @@ class CheckoutController {
       compact: true
     })
 
+    // 调用统一下单接口
     const wxPayResponse = await axios.post(unifiedOrderApi, xmlOrder)
 
-    logger.info('预支付响应：', wxPayResponse)
+    const _prepay = convert.xml2js(wxPayResponse.data, {
+      compact: true,
+      cdataKey: 'value',
+      textKey: 'value'
+    }).xml
+
+    const prepay = Object.keys(_prepay).reduce((accumulator, key) => {
+      accumulator[key] = _prepay[key].value
+      return accumulator
+    }, {})
+
+    // logger.debug(prepay)
+
+    // logger.info('预支付响应：', wxPayResponse)
 
     // logger.debug(xmlOrder)
 
