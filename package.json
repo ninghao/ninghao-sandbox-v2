@@ -28,7 +28,8 @@
     "@adonisjs/shield": "^1.0.4",
     "log4js": "^2.5.2",
     "moment": "^2.20.1",
-    "randomstring": "^1.1.5"
+    "randomstring": "^1.1.5",
+    "xml-js": "^1.6.2"
   },
   "devDependencies": {},
   "autoload": {

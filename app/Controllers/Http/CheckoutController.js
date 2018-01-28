@@ -6,6 +6,7 @@ const moment       = use('moment')
 const randomString = use('randomstring')
 const queryString  = use('querystring')
 const crypto       = use('crypto')
+const convert      = use('xml-js')
 
 class CheckoutController {
   render ({ view }) {
@@ -68,7 +69,21 @@ class CheckoutController {
     // 4. md5 后全部大写
     const sign = crypto.createHash('md5').update(stringOrderWithKey).digest('hex').toUpperCase()
 
-    logger.info('签名：', sign)
+    order = {
+      xml: {
+        ...order,
+        sign
+      }
+    }
+
+    // 转换成 xml 格式
+    const xmlOrder = convert.js2xml(order, {
+      compact: true
+    })
+
+    logger.debug(xmlOrder)
+
+    // logger.info('签名：', sign)
 
     // logger.debug(stringOrder)
 
