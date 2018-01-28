@@ -27,7 +27,8 @@
     "@adonisjs/session": "^1.0.19",
     "@adonisjs/shield": "^1.0.4",
     "log4js": "^2.5.2",
-    "moment": "^2.20.1"
+    "moment": "^2.20.1",
+    "randomstring": "^1.1.5"
   },
   "devDependencies": {},
   "autoload": {
