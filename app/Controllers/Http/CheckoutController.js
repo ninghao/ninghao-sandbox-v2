@@ -56,10 +56,13 @@ class CheckoutController {
       return accumulator
     }, {})
 
-    // 转换成地址查询符
+    // 2. 转换成地址查询符
     const stringOrder = queryString.stringify(sortedOrder, null, null, {
       encodeURIComponent: queryString.unescape
     })
+
+    // 3. 结尾加上密钥
+    const stringOrderWithKey = `${ stringOrder }&key=${ key }`
 
     // logger.debug(stringOrder)
 
