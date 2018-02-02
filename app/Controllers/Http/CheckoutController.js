@@ -10,7 +10,7 @@ const convert      = use('xml-js')
 const axios        = use('axios')
 
 class CheckoutController {
-  async pay () {
+  async pay ({ request }) {
     logger.info('请求支付 ------------------------')
 
     // 公众账号 ID
@@ -32,7 +32,10 @@ class CheckoutController {
     const total_fee = 3
 
     // 支付类型
-    const trade_type = 'NATIVE'
+    const trade_type = 'MWEB'
+
+    // 用户 IP
+    const spbill_create_ip = request.header('x-real-ip')
 
     // 商品 ID
     const product_id = 1
@@ -55,7 +58,8 @@ class CheckoutController {
       trade_type,
       product_id,
       notify_url,
-      nonce_str
+      nonce_str,
+      spbill_create_ip
     }
 
     const sign = this.wxPaySign(order, key)
@@ -66,6 +70,8 @@ class CheckoutController {
     const wxPayResponse = await axios.post(unifiedOrderApi, xmlOrder)
 
     const data = this.xmlToJS(wxPayResponse.data)
+
+    logger.debug(data)
 
     return 'ok'
   }
