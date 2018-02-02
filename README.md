@@ -34,3 +34,19 @@ adonis serve --dev
 ```
 npm install @adonisjs/cli --global
 ```
+
+## 4. 配置
+微信支付的主配置文件是在 `config/wxpay.js` 这个文件里面，打开这个文件，修改里面的相关的配置。然后你要修改项目根目录下的 .env 这个环境变量文件。在这个文件里添加下面这些配置：
+
+```
+WXPAY_APP_ID=wx58263149db20f28e
+WXPAY_MCH_ID=1328508902
+WXPAY_KEY=3fa1815e38bf4908sse12287eb6a7f92
+WXPAY_NOTIFY_URL=https://sandbox.ninghao.net/wxpay/notify
+```
+
+等号左边是配置的名字，右边是配置的值，你可把等号右边的东西换成你自己的。
+
+- WXPAY_APP_ID：微信的应用 ID
+- WXPAY_MCH_ID：微信支付账户的商户 ID
+- WXPAY_NOTIFY_URL：微信支付成功以后，在应用里接受支付结果通知的地址
