@@ -8,37 +8,11 @@ const queryString  = use('querystring')
 const crypto       = use('crypto')
 const convert      = use('xml-js')
 const axios        = use('axios')
-const qrcode       = use('qrcode')
 
 class CheckoutController {
   async pay () {
     logger.info('请求支付 ------------------------')
-    return 'ok'
-  }
 
-  wxPaySign (data, key) {
-    // 1. 排序
-    const sortedOrder = Object.keys(data).sort().reduce((accumulator, key) => {
-      accumulator[key] = data[key]
-      // logger.debug(accumulator)
-      return accumulator
-    }, {})
-
-    // 2. 转换成地址查询符
-    const stringOrder = queryString.stringify(sortedOrder, null, null, {
-      encodeURIComponent: queryString.unescape
-    })
-
-    // 3. 结尾加上密钥
-    const stringOrderWithKey = `${ stringOrder }&key=${ key }`
-
-    // 4. md5 后全部大写
-    const sign = crypto.createHash('md5').update(stringOrderWithKey).digest('hex').toUpperCase()
-
-    return sign
-  }
-
-  async render ({ view }) {
     // 公众账号 ID
     const appid = Config.get('wxpay.appid')
 
@@ -86,6 +60,32 @@ class CheckoutController {
 
     const sign = this.wxPaySign(order, key)
 
+    const xmlOrder = this.orderToXML(order, sign)
+
+    // 调用统一下单接口
+    const wxPayResponse = await axios.post(unifiedOrderApi, xmlOrder)
+
+    const data = this.xmlToJS(wxPayResponse.data)
+
+    return 'ok'
+  }
+
+  xmlToJS (xmlData) {
+    const _data = convert.xml2js(xmlData, {
+      compact: true,
+      cdataKey: 'value',
+      textKey: 'value'
+    }).xml
+
+    const data = Object.keys(_data).reduce((accumulator, key) => {
+      accumulator[key] = _data[key].value
+      return accumulator
+    }, {})
+
+    return data
+  }
+
+  orderToXML (order, sign) {
     order = {
       xml: {
         ...order,
@@ -98,36 +98,33 @@ class CheckoutController {
       compact: true
     })
 
-    // 调用统一下单接口
-    const wxPayResponse = await axios.post(unifiedOrderApi, xmlOrder)
+    return xmlOrder
+  }
 
-    const _prepay = convert.xml2js(wxPayResponse.data, {
-      compact: true,
-      cdataKey: 'value',
-      textKey: 'value'
-    }).xml
-
-    const prepay = Object.keys(_prepay).reduce((accumulator, key) => {
-      accumulator[key] = _prepay[key].value
+  wxPaySign (data, key) {
+    // 1. 排序
+    const sortedOrder = Object.keys(data).sort().reduce((accumulator, key) => {
+      accumulator[key] = data[key]
+      // logger.debug(accumulator)
       return accumulator
     }, {})
 
-    // 生成二维码链接
-    const qrcodeUrl = await qrcode.toDataURL(prepay.code_url, { width: 300 })
+    // 2. 转换成地址查询符
+    const stringOrder = queryString.stringify(sortedOrder, null, null, {
+      encodeURIComponent: queryString.unescape
+    })
 
-    // logger.debug(prepay)
+    // 3. 结尾加上密钥
+    const stringOrderWithKey = `${ stringOrder }&key=${ key }`
 
-    // logger.info('预支付响应：', wxPayResponse)
+    // 4. md5 后全部大写
+    const sign = crypto.createHash('md5').update(stringOrderWithKey).digest('hex').toUpperCase()
 
-    // logger.debug(xmlOrder)
+    return sign
+  }
 
-    // logger.info('签名：', sign)
-
-    // logger.debug(stringOrder)
-
-    // logger.debug(sortedOrder)
-
-    return view.render('commerce.checkout', { qrcodeUrl })
+  async render ({ view }) {
+    return view.render('commerce.checkout')
   }
 
   wxPayNotify ({ request }) {
