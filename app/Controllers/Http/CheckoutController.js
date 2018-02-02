@@ -73,7 +73,7 @@ class CheckoutController {
 
     logger.debug(data)
 
-    return 'ok'
+    return data.mweb_url
   }
 
   xmlToJS (xmlData) {

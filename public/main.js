@@ -12,6 +12,9 @@
       },
       success: (response) => {
         console.log(response)
+        if (response) {
+          window.location.href = response
+        }
       },
       error: (error) => {
         console.log(error)
