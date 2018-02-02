@@ -1,31 +1,36 @@
-# Adonis fullstack application
+# 宁皓网 Node.js 课程代码
 
-This is the fullstack boilerplate for AdonisJs, it comes pre-configured with.
+打开命令行，Windows 上下载安装 Cmder 作为命令行工具，macOs 用户使用系统自带的终端（Terminal）。然后在命令行下面执行下面这些步骤。
 
-1. Bodyparser
-2. Session
-3. Authentication
-4. Web security middleware
-5. CORS
-6. Edge template engine
-7. Lucid ORM
-8. Migrations and seeds
+## 1. 克隆仓库
 
-## Setup
+```
+git clone git@github.com:ninghao/ninghao-sandbox-v2.git
+```
+## 2. 切换分支
 
-Use the adonis command to install the blueprint
+不同的课程的代码，可能会在不同的分支上。把项目克隆到本地以后可以切换到跟课程对应的分支上。比如：
 
-```bash
-adonis new yardstick
+```
+cd ninghao-sandbox-v2
+git branch -a
+git checkout -b wxpay remotes/origin/wxpay
 ```
 
-or manually clone the repo and then run `npm install`.
+`wxpay`，这个分支上包含的是微信支付课程中的扫码支付课程用的代码。
 
+## 3. 安装与运行
+先确定您的操作系统上，在全局范围已经安装了 `@adonisjs/cli` 这个包。然后执行下面这些命令：
 
-### Migrations
+```
+npm install
+cp .env.example .env
+adonis key:generate
+adonis serve --dev
+```
 
-Run the following command to run startup migrations.
+如果提示没有找到 `adonis` 命令，您需要先去安装一下。
 
-```js
-adonis migration:run
+```
+npm install @adonisjs/cli --global
 ```
