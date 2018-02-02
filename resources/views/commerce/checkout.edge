@@ -11,7 +11,7 @@
               <p class="card-amount"><small>￥</small>0.03</p>
               <p class="card-text text-muted"><small>订单金额</small></p>
             </div>
-            <button class="btn btn-primary btn-block">确认支付</button>
+            <button data-csrf="{{ csrfToken }}" id="pay" class="btn btn-primary btn-block">确认支付</button>
           </div>
         </div>
       </div>

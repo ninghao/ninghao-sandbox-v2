@@ -11,6 +11,11 @@ const axios        = use('axios')
 const qrcode       = use('qrcode')
 
 class CheckoutController {
+  async pay () {
+    logger.info('请求支付 ------------------------')
+    return 'ok'
+  }
+
   wxPaySign (data, key) {
     // 1. 排序
     const sortedOrder = Object.keys(data).sort().reduce((accumulator, key) => {
