@@ -1,0 +1,14 @@
+.card-price {
+  font-family: "Century Gothic", sans-serif;
+  font-weight: bold;
+}
+
+.card-amount small {
+  font-size: 16px;
+}
+
+.card-amount {
+  font-size: 32px;
+  padding: 0;
+  margin: 0;
+}
