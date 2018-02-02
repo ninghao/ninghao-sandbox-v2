@@ -15,3 +15,5 @@ yarn.lock
 database/development.sqlite
 
 *.log
+
+.DS_Store
