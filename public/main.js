@@ -14,8 +14,24 @@
         console.log(response)
         if (response) {
           $('#modal-query').modal()
-          window.location.href = response
+          // window.location.href = response
         }
+      },
+      error: (error) => {
+        console.log(error)
+      }
+    })
+  })
+
+  $('#order-query').click(() => {
+    $.ajax({
+      url: '/checkout/query',
+      method: 'POST',
+      data: {
+        _csrf
+      },
+      success: (response) => {
+        console.log(response)
       },
       error: (error) => {
         console.log(error)

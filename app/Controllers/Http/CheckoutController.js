@@ -10,6 +10,11 @@ const convert      = use('xml-js')
 const axios        = use('axios')
 
 class CheckoutController {
+  async query () {
+    logger.info('请求查询 -----------------------')
+    return '查询结果'
+  }
+
   completed ({ view }) {
     return view.render('commerce.completed')
   }
