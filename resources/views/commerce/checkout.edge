@@ -17,4 +17,24 @@
       </div>
     </div>
   </div>
+  <div class="modal" id="modal-query">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">支付结果</h5>
+          <button class="close" type="button" data-dismiss="modal">
+            <span>&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>支付完成以后，请再确定一下支付结果。</p>
+        </div>
+        <div class="modal-footer">
+          <button id="order-query" class="btn btn-primary btn-block" data-csrf="{{ csrfToken }}">
+            支付成功
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 @endsection

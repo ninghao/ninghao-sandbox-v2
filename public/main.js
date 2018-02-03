@@ -13,6 +13,7 @@
       success: (response) => {
         console.log(response)
         if (response) {
+          $('#modal-query').modal()
           window.location.href = response
         }
       },
