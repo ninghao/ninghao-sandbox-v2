@@ -17,6 +17,7 @@ module.exports = {
 
   // 接口地址
   api: {
-    unifiedorder: 'https://api.mch.weixin.qq.com/pay/unifiedorder'
+    unifiedorder: 'https://api.mch.weixin.qq.com/pay/unifiedorder',
+    orderquery: 'https://api.mch.weixin.qq.com/pay/orderquery'
   }
 }

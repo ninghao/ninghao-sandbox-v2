@@ -26,7 +26,7 @@
         if (response) {
           modalQuery.modal()
           localStorage.setItem('#modal-query', 'show')
-          // window.location.href = response
+          window.location.href = response
         }
       },
       error: (error) => {
@@ -43,7 +43,13 @@
         _csrf
       },
       success: (response) => {
-        console.log(response)
+        switch (response.trade_state) {
+          case 'SUCCESS':
+            window.location.href = '/checkout/completed'
+            break
+          default:
+            console.log(response)
+        }
       },
       error: (error) => {
         console.log(error)

@@ -10,16 +10,48 @@ const convert      = use('xml-js')
 const axios        = use('axios')
 
 class CheckoutController {
-  async query () {
+  async query ({ session }) {
     logger.info('请求查询 -----------------------')
-    return '查询结果'
+    // 公众账号 ID
+    const appid = Config.get('wxpay.appid')
+
+    // 商户号
+    const mch_id = Config.get('wxpay.mch_id')
+
+    // 密钥
+    const key = Config.get('wxpay.key')
+
+    // 商户订单号
+    const out_trade_no = session.get('out_trade_no')
+
+    // 随机字符
+    const nonce_str = randomString.generate(32)
+
+    // 查询订单接口
+    const orderQueryApi = Config.get('wxpay.api.orderquery')
+
+    const order = {
+      appid,
+      mch_id,
+      out_trade_no,
+      nonce_str
+    }
+
+    const sign = this.wxPaySign(order, key)
+    const xmlOrder = this.orderToXML(order, sign)
+    const wxPayQueryResponse = await axios.post(orderQueryApi, xmlOrder)
+    const result = this.xmlToJS(wxPayQueryResponse.data)
+
+    logger.debug(result)
+
+    return result
   }
 
   completed ({ view }) {
     return view.render('commerce.completed')
   }
 
-  async pay ({ request }) {
+  async pay ({ request, session }) {
     logger.info('请求支付 ------------------------')
 
     // 公众账号 ID
@@ -33,6 +65,7 @@ class CheckoutController {
 
     // 商户订单号
     const out_trade_no = moment().local().format('YYYYMMDDHHmmss')
+    session.put('out_trade_no', out_trade_no)
 
     // 商品描述
     const body = 'ninghao'
