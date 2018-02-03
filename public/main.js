@@ -2,6 +2,17 @@
   'use strict'
 
   const _csrf = $('#pay').data('csrf')
+  const modalQuery = $('#modal-query')
+
+  modalQuery.on('hidden.bs.modal', () => {
+    localStorage.setItem('#modal-query', 'hide')
+  })
+
+  const modalQueryState = localStorage.getItem('#modal-query')
+
+  if (modalQueryState === 'show') {
+    modalQuery.modal()
+  }
 
   $('#pay').click(() => {
     $.ajax({
@@ -13,7 +24,8 @@
       success: (response) => {
         console.log(response)
         if (response) {
-          $('#modal-query').modal()
+          modalQuery.modal()
+          localStorage.setItem('#modal-query', 'show')
           // window.location.href = response
         }
       },
