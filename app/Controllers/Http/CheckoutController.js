@@ -10,6 +10,10 @@ const convert      = use('xml-js')
 const axios        = use('axios')
 
 class CheckoutController {
+  completed ({ view }) {
+    return view.render('commerce.completed')
+  }
+
   async pay ({ request }) {
     logger.info('请求支付 ------------------------')
 
