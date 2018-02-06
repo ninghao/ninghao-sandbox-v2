@@ -250,6 +250,11 @@ class CheckoutController {
     return sign
   }
 
+  /**
+   * 结账页面。
+   * @param  {Object}  view
+   * @return 渲染结账页面视图。
+   */
   async render ({ view }) {
     return view.render('commerce.checkout')
   }
