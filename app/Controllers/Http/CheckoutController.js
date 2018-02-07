@@ -155,7 +155,28 @@ class CheckoutController {
     const data = this.xmlToJS(wxPayResponse.data)
     logger.debug(data)
 
-    return null
+    /**
+     * JSAPI 参数
+     */
+    const timeStamp = moment().local().unix()
+    const prepay_id = data.prepay_id
+
+    let wxJSApiParams = {
+      appId: appid,
+      timeStamp: `${ timeStamp }`,
+      nonceStr: nonce_str,
+      package: `prepay_id=${ prepay_id }`,
+      signType: 'MD5'
+    }
+
+    const paySign = this.wxPaySign(wxJSApiParams, key)
+
+    wxJSApiParams = {
+      ...wxJSApiParams,
+      paySign
+    }
+
+    return wxJSApiParams
   }
 
   /**
