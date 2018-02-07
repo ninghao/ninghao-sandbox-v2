@@ -259,8 +259,9 @@ class CheckoutController {
     const code = request.input('code')
     logger.debug('code: ', code)
 
+    const appid = Config.get('wxpay.appid')
+
     if (!code) {
-      const appid = Config.get('wxpay.appid')
       const redirect_uri = `https://${ request.hostname() }${ request.url() }`
       const response_type = 'code'
       const scope = 'snsapi_base'
@@ -278,6 +279,23 @@ class CheckoutController {
 
       return response.redirect(openAuthUrl)
     }
+
+    const secret = Config.get('weixin.appSecret')
+    const grant_type = 'authorization_code'
+
+    const accessTokenUrlParams = {
+      appid,
+      secret,
+      grant_type,
+      code
+    }
+
+    const accessTokenUrlString = queryString.stringify(accessTokenUrlParams)
+    const accessTokenApi = Config.get('weixin.api.accessToken')
+    const accessTokenUrl = `${ accessTokenApi }?${ accessTokenUrlString }`
+
+    const wxResponse = await axios.get(accessTokenUrl)
+    logger.debug('accessToken: ', wxResponse.data)
 
     return view.render('commerce.checkout')
   }
