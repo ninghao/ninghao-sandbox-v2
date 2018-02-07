@@ -255,22 +255,29 @@ class CheckoutController {
    * @param  {Object}  view
    * @return 渲染结账页面视图。
    */
-  async render ({ view, request }) {
-    const appid = Config.get('wxpay.appid')
-    const redirect_uri = `https://${ request.hostname() }${ request.url() }`
-    const response_type = 'code'
-    const scope = 'snsapi_base'
+  async render ({ view, request, response }) {
+    const code = request.input('code')
+    logger.debug('code: ', code)
 
-    const openAuthUrlParams = {
-      appid,
-      redirect_uri,
-      response_type,
-      scope
+    if (!code) {
+      const appid = Config.get('wxpay.appid')
+      const redirect_uri = `https://${ request.hostname() }${ request.url() }`
+      const response_type = 'code'
+      const scope = 'snsapi_base'
+
+      const openAuthUrlParams = {
+        appid,
+        redirect_uri,
+        response_type,
+        scope
+      }
+      const openAuthUrlString = queryString.stringify(openAuthUrlParams)
+
+      const openAuthApi = Config.get('weixin.open.auth')
+      const openAuthUrl = `${ openAuthApi }?${ openAuthUrlString }`
+
+      return response.redirect(openAuthUrl)
     }
-    const openAuthUrlString = queryString.stringify(openAuthUrlParams)
-
-    const openAuthApi = Config.get('weixin.open.auth')
-    const openAuthUrl = `${ openAuthApi }?${ openAuthUrlString }`
 
     return view.render('commerce.checkout')
   }
