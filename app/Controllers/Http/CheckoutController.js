@@ -109,7 +109,7 @@ class CheckoutController {
     const total_fee = 3
 
     /** 支付类型 */
-    const trade_type = 'MWEB'
+    const trade_type = 'JSAPI'
 
     /** 用户 IP */
     const spbill_create_ip = request.header('x-real-ip')
@@ -126,6 +126,9 @@ class CheckoutController {
     /** 统一下单接口 */
     const unifiedOrderApi = Config.get('wxpay.api.unifiedorder')
 
+    const accessToken = session.get('accessToken')
+    const openid = accessToken.openid
+
     /**
      * 准备支付数据。
      */
@@ -139,7 +142,8 @@ class CheckoutController {
       product_id,
       notify_url,
       nonce_str,
-      spbill_create_ip
+      spbill_create_ip,
+      openid
     }
     const sign = this.wxPaySign(order, key)
     const xmlOrder = this.orderToXML(order, sign)
@@ -151,12 +155,7 @@ class CheckoutController {
     const data = this.xmlToJS(wxPayResponse.data)
     logger.debug(data)
 
-    /**
-     * 返回支付跳转链接，
-     * 前端得到链接会重定向到这个链接地址，
-     * 这样会调用微信 App 进行支付。
-     */
-    return data.mweb_url
+    return null
   }
 
   /**
@@ -255,7 +254,7 @@ class CheckoutController {
    * @param  {Object}  view
    * @return 渲染结账页面视图。
    */
-  async render ({ view, request, response }) {
+  async render ({ view, request, response, session }) {
     const code = request.input('code')
     logger.debug('code: ', code)
 
@@ -296,6 +295,7 @@ class CheckoutController {
 
     const wxResponse = await axios.get(accessTokenUrl)
     logger.debug('accessToken: ', wxResponse.data)
+    session.put('accessToken', wxResponse.data)
 
     return view.render('commerce.checkout')
   }
