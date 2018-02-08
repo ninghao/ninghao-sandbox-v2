@@ -114,11 +114,10 @@ class CheckoutController {
 
     const code = request.input('code')
     const wxSession = await this.prePay(code)
-    logger.debug('微信用户会话：', wxSession)
-    return code
+    const openid = wxSession.openid
 
     /** 公众账号 ID */
-    const appid = Config.get('wxpay.appid')
+    const appid = Config.get('wxapp.appid')
 
     /** 商户号 */
     const mch_id = Config.get('wxpay.mch_id')
@@ -153,10 +152,6 @@ class CheckoutController {
 
     /** 统一下单接口 */
     const unifiedOrderApi = Config.get('wxpay.api.unifiedorder')
-
-    /** 微信用户 openid */
-    const accessToken = session.get('accessToken')
-    const openid = accessToken.openid
 
     /**
      * 准备支付数据。
