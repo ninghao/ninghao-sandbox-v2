@@ -8,6 +8,7 @@ module.exports = {
     auth: 'https://open.weixin.qq.com/connect/oauth2/authorize'
   },
   api: {
-    accessToken: 'https://api.weixin.qq.com/sns/oauth2/access_token'
+    accessToken: 'https://api.weixin.qq.com/sns/oauth2/access_token',
+    jsCodeToSession: 'https://api.weixin.qq.com/sns/jscode2session'
   }
 }

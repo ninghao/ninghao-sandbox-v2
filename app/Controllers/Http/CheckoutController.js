@@ -79,6 +79,29 @@ class CheckoutController {
     return view.render('commerce.completed')
   }
 
+  async prePay (code) {
+    const appid = Config.get('wxapp.appid')
+    const secret = Config.get('wxapp.secret')
+    const js_code = code
+    const grant_type = 'authorization_code'
+
+    const jsCodeToSessionParams = {
+      appid,
+      secret,
+      js_code,
+      grant_type
+    }
+
+    const jsCodeToSessionString = queryString.stringify(jsCodeToSessionParams)
+    const jsCodeToSessionApi = Config.get('weixin.api.jsCodeToSession')
+    const jsCodeToSessionUrl = `${ jsCodeToSessionApi }?${ jsCodeToSessionString }`
+
+    const wxResponse = await axios.post(jsCodeToSessionUrl)
+    const wxSession = wxResponse.data
+
+    return wxSession
+  }
+
   /**
    * 支付。
    *
@@ -90,6 +113,8 @@ class CheckoutController {
     logger.info('请求支付 ------------------------')
 
     const code = request.input('code')
+    const wxSession = await this.prePay(code)
+    logger.debug('微信用户会话：', wxSession)
     return code
 
     /** 公众账号 ID */
@@ -287,54 +312,6 @@ class CheckoutController {
    * @return 渲染结账页面视图。
    */
   async render ({ view, request, response, session }) {
-    /**
-     * 获取申请 access_token 需要的 code。
-     */
-    const code = request.input('code')
-    logger.debug('code: ', code)
-
-    const appid = Config.get('wxpay.appid')
-
-    if (!code) {
-      const redirect_uri = `https://${ request.hostname() }${ request.url() }`
-      const response_type = 'code'
-      const scope = 'snsapi_base'
-
-      const openAuthUrlParams = {
-        appid,
-        redirect_uri,
-        response_type,
-        scope
-      }
-      const openAuthUrlString = queryString.stringify(openAuthUrlParams)
-
-      const openAuthApi = Config.get('weixin.open.auth')
-      const openAuthUrl = `${ openAuthApi }?${ openAuthUrlString }`
-
-      return response.redirect(openAuthUrl)
-    }
-
-    /**
-     * 获取 access_token
-     */
-    const secret = Config.get('weixin.appSecret')
-    const grant_type = 'authorization_code'
-
-    const accessTokenUrlParams = {
-      appid,
-      secret,
-      grant_type,
-      code
-    }
-
-    const accessTokenUrlString = queryString.stringify(accessTokenUrlParams)
-    const accessTokenApi = Config.get('weixin.api.accessToken')
-    const accessTokenUrl = `${ accessTokenApi }?${ accessTokenUrlString }`
-
-    const wxResponse = await axios.get(accessTokenUrl)
-    logger.debug('accessToken: ', wxResponse.data)
-    session.put('accessToken', wxResponse.data)
-
     /**
      * 渲染结账页面视图。
      */
