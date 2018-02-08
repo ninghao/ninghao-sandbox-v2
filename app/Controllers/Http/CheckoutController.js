@@ -126,6 +126,7 @@ class CheckoutController {
     /** 统一下单接口 */
     const unifiedOrderApi = Config.get('wxpay.api.unifiedorder')
 
+    /** 微信用户 openid */
     const accessToken = session.get('accessToken')
     const openid = accessToken.openid
 
@@ -176,6 +177,10 @@ class CheckoutController {
       paySign
     }
 
+    /**
+     * 为前端返回 JSAPI 参数，
+     * 根据这些参数，调用微信支付功能。
+     */
     return wxJSApiParams
   }
 
@@ -273,9 +278,15 @@ class CheckoutController {
   /**
    * 结账页面。
    * @param  {Object}  view
+   * @param  {Object}  request 请求，需要请求里的一些数据。
+   * @param  {Object}  response 响应，需要用到重定向。
+   * @param  {Object}  session 会话，要在会话里存点东西。
    * @return 渲染结账页面视图。
    */
   async render ({ view, request, response, session }) {
+    /**
+     * 获取申请 access_token 需要的 code。
+     */
     const code = request.input('code')
     logger.debug('code: ', code)
 
@@ -300,6 +311,9 @@ class CheckoutController {
       return response.redirect(openAuthUrl)
     }
 
+    /**
+     * 获取 access_token
+     */
     const secret = Config.get('weixin.appSecret')
     const grant_type = 'authorization_code'
 
@@ -318,6 +332,9 @@ class CheckoutController {
     logger.debug('accessToken: ', wxResponse.data)
     session.put('accessToken', wxResponse.data)
 
+    /**
+     * 渲染结账页面视图。
+     */
     return view.render('commerce.checkout')
   }
 

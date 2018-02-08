@@ -1,4 +1,4 @@
-# 宁皓网 Node.js 课程代码
+# 微信公众号支付
 
 打开命令行，Windows 上下载安装 Cmder 作为命令行工具，macOs 用户使用系统自带的终端（Terminal）。然后在命令行下面执行下面这些步骤。
 
@@ -14,10 +14,10 @@ git clone git@github.com:ninghao/ninghao-sandbox-v2.git
 ```
 cd ninghao-sandbox-v2
 git branch -a
-git checkout -b wxpay-h5 remotes/origin/wxpay-h5
+git checkout -b wxpay-jsapi remotes/origin/wxpay-jsapi
 ```
 
-`wxpay-h5`，这个分支上包含的是微信支付课程中的扫码支付课程用的代码。
+`wxpay-jsapi`，这个分支上包含的是微信支付课程中的扫码支付课程用的代码。
 
 ## 3. 安装与运行
 先确定您的操作系统上，在全局范围已经安装了 `@adonisjs/cli` 这个包。然后执行下面这些命令：
@@ -50,3 +50,4 @@ WXPAY_NOTIFY_URL=https://sandbox.ninghao.net/wxpay/notify
 - WXPAY_APP_ID：微信的应用 ID
 - WXPAY_MCH_ID：微信支付账户的商户 ID
 - WXPAY_NOTIFY_URL：微信支付成功以后，在应用里接受支付结果通知的地址
+- WXMP_APP_SECRET：公众号开发者密码，需要在公众号后台，开发 - 基本设置 这里去设置开发者密码
