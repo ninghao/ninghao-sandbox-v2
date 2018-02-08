@@ -89,6 +89,9 @@ class CheckoutController {
   async pay ({ request, session }) {
     logger.info('请求支付 ------------------------')
 
+    const code = request.input('code')
+    return code
+
     /** 公众账号 ID */
     const appid = Config.get('wxpay.appid')
 
