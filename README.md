@@ -1,4 +1,4 @@
-# 宁皓网 Node.js 课程代码
+# 微信支付：h5 移动端支付
 
 打开命令行，Windows 上下载安装 Cmder 作为命令行工具，macOs 用户使用系统自带的终端（Terminal）。然后在命令行下面执行下面这些步骤。
 
@@ -49,4 +49,5 @@ WXPAY_NOTIFY_URL=https://sandbox.ninghao.net/wxpay/notify
 
 - WXPAY_APP_ID：微信的应用 ID
 - WXPAY_MCH_ID：微信支付账户的商户 ID
+- WXPAY_KEY：微信支付密钥
 - WXPAY_NOTIFY_URL：微信支付成功以后，在应用里接受支付结果通知的地址
