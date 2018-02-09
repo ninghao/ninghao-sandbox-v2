@@ -18,21 +18,6 @@
   }
 
   /**
-   * JSAPI 微信支付。
-   *
-   * @param  {Object} wxJSApiParams 支付需要的参数数据。
-   */
-  const wxPay = (wxJSApiParams) => {
-    WeixinJSBridge.invoke(
-      'getBrandWCPayRequest',
-      wxJSApiParams,
-      (response) => {
-        console.log(response)
-      }
-    )
-  }
-
-  /**
    * 请求支付。
    */
   $('#pay').click(() => {
@@ -47,8 +32,6 @@
         if (response) {
           modalQuery.modal()
           localStorage.setItem('#modal-query', 'show')
-
-          wxPay(response)
         }
       },
       error: (error) => {
@@ -68,13 +51,7 @@
         _csrf
       },
       success: (response) => {
-        switch (response.trade_state) {
-          case 'SUCCESS':
-            window.location.href = '/checkout/completed'
-            break
-          default:
-            console.log(response)
-        }
+        console.log(response)
       },
       error: (error) => {
         console.log(error)

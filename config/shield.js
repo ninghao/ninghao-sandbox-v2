@@ -134,7 +134,7 @@ module.exports = {
   csrf: {
     enable: true,
     methods: ['POST', 'PUT', 'DELETE'],
-    filterUris: ['/wxpay/notify', '/checkout/pay'],
+    filterUris: ['/alipay/notify'],
     cookieOptions: {
       httpOnly: false,
       sameSite: true,

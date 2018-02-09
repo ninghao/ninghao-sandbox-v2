@@ -17,12 +17,12 @@ const Route = use('Route')
 
 Route.on('/').render('welcome')
 
-Route.get('checkout', 'CheckoutController.render')
+Route.group(() => {
+    Route.get('/', 'CheckoutController.render')
+    Route.post('pay', 'CheckoutController.pay')
+    Route.post('query', 'CheckoutController.query')
+    Route.get('completed', 'CheckoutController.completed')
+  })
+  .prefix('checkout')
 
-Route.post('wxpay/notify', 'CheckoutController.wxPayNotify')
-
-Route.post('checkout/pay', 'CheckoutController.pay')
-
-Route.get('checkout/completed', 'CheckoutController.completed')
-
-Route.post('checkout/query', 'CheckoutController.query')
+Route.post('alipay/notify', 'CheckoutController.aliPayNotify')
