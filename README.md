@@ -53,3 +53,6 @@ WXA_SECRET=37768931e8a1fe185e9cf93f361259e3
 - WXMP_APP_SECRET：公众号开发者密码，需要在公众号后台，开发 - 基本设置 这里去设置开发者密码
 - WXA_APP_ID：小程序ID
 - WXA_SECRET：小程序密钥
+
+## 5. 小程序
+用的小程序项目在 `ninghao-weixin` 这个仓库里，分支是 `wxpay-wxa`。[项目地址](https://github.com/ninghao/ninghao-weixin/tree/wxpay-wxa)
