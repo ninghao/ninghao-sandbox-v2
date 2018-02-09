@@ -79,12 +79,25 @@ class CheckoutController {
     return view.render('commerce.completed')
   }
 
+  /**
+   * 支付前的预处理工作。
+   *
+   * @param  {string}  code 登录凭证。
+   * @return {Object} 微信用户会话。
+   */
   async prePay (code) {
+    /** 小程序 ID */
     const appid = Config.get('wxapp.appid')
+    /** 小程序密钥 */
     const secret = Config.get('wxapp.secret')
+    /** 登录凭证 */
     const js_code = code
+    /** 授权类型 */
     const grant_type = 'authorization_code'
 
+    /**
+     * 请求得到微信用户会话。
+     */
     const jsCodeToSessionParams = {
       appid,
       secret,
@@ -99,6 +112,9 @@ class CheckoutController {
     const wxResponse = await axios.post(jsCodeToSessionUrl)
     const wxSession = wxResponse.data
 
+    /**
+     * 返回微信用户会话。
+     */
     return wxSession
   }
 
@@ -112,7 +128,15 @@ class CheckoutController {
   async pay ({ request, session }) {
     logger.info('请求支付 ------------------------')
 
+    /**
+     * 登录凭证，
+     * 从小程序那里调用 wx.login 得到并发送到这里。
+     */
     const code = request.input('code')
+
+    /**
+     * 获取微信用户 openid。
+     */
     const wxSession = await this.prePay(code)
     const openid = wxSession.openid
 
