@@ -43,11 +43,13 @@ WXPAY_APP_ID=wx58263149db20f28e
 WXPAY_MCH_ID=1328508902
 WXPAY_KEY=3fa1815e38bf4908sse12287eb6a7f92
 WXPAY_NOTIFY_URL=https://sandbox.ninghao.net/wxpay/notify
+WXMP_APP_SECRET=6d3151dca0abd122731c13f1d33d8869e
 ```
 
 等号左边是配置的名字，右边是配置的值，你可把等号右边的东西换成你自己的。
 
 - WXPAY_APP_ID：微信的应用 ID
 - WXPAY_MCH_ID：微信支付账户的商户 ID
+- WXPAY_KEY：微信支付密钥
 - WXPAY_NOTIFY_URL：微信支付成功以后，在应用里接受支付结果通知的地址
 - WXMP_APP_SECRET：公众号开发者密码，需要在公众号后台，开发 - 基本设置 这里去设置开发者密码
