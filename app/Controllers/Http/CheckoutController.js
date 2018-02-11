@@ -16,7 +16,7 @@ class CheckoutController {
    * 支付。
    */
   async pay () {
-
+    return '请求支付'
   }
 
   /**
