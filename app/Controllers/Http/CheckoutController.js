@@ -137,8 +137,9 @@ class CheckoutController {
   /**
    * 处理支付结果通知。
    */
-  aliPayNotify () {
-
+  aliPayNotify ({ request }) {
+    const paymentNotification = request.all()
+    logger.debug('支付结果通知：', paymentNotification)
   }
 
   /**
@@ -161,7 +162,10 @@ class CheckoutController {
   /**
    * 结账页面。
    */
-  async render ({ view }) {
+  async render ({ view, request }) {
+    const returnUrlData = request.all()
+    logger.debug('返回地址上的数据：', returnUrlData)
+    
     /**
      * 渲染结账页面视图。
      */
