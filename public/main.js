@@ -32,6 +32,8 @@
         if (response) {
           modalQuery.modal()
           localStorage.setItem('#modal-query', 'show')
+
+          window.location.href = response
         }
       },
       error: (error) => {

@@ -12,6 +12,19 @@ const axios        = use('axios')
  * 结账控制器。
  */
 class CheckoutController {
+  aliPayRequestUrl (requestParams, sign) {
+    const gateway = Config.get('alipay.api.gateway')
+
+    const requestParamsString = queryString.stringify({
+      ...requestParams,
+      sign
+    })
+
+    const requestUrl = `${ gateway }?${ requestParamsString }`
+
+    return requestUrl
+  }
+
   aliPayPreSign (data) {
     const sortedData = Object.keys(data).sort().reduce((accumulator, key) => {
       const itemValue = data[key].trim()
@@ -113,7 +126,12 @@ class CheckoutController {
     const sign = this.aliPaySign(requestParams)
     logger.debug('签名：', sign)
 
-    return '请求支付'
+    /**
+     * 请求地址
+     */
+    const requestUrl = this.aliPayRequestUrl(requestParams, sign)
+
+    return requestUrl
   }
 
   /**
