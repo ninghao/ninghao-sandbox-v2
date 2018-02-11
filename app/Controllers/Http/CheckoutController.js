@@ -54,6 +54,28 @@ class CheckoutController {
     const commonParams = this.aliPayCommonParams('alipay.trade.page.pay')
     logger.debug('公共参数：', commonParams)
 
+    /**
+     * 请求参数
+     */
+    const out_trade_no = moment().local().format('YYYYMMDDHHmmss')
+    const product_code = 'FAST_INSTANT_TRADE_PAY'
+    const total_amount = '0.03'
+    const subject = 'ninghao'
+
+    const biz_content = JSON.stringify({
+      out_trade_no,
+      product_code,
+      total_amount,
+      subject
+    })
+
+    const requestParams = {
+      ...commonParams,
+      biz_content
+    }
+
+    logger.debug('请求参数：', requestParams)
+
     return '请求支付'
   }
 
