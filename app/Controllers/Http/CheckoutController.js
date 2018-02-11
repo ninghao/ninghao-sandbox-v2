@@ -12,6 +12,21 @@ const axios        = use('axios')
  * 结账控制器。
  */
 class CheckoutController {
+  aliPayVerifySign (data, preProcess = this.aliPayPreSign) {
+    const aliPayPublicKey = Config.get('alipay.aliPayPublicKey')
+    const sign = data.sign
+    delete data.sign
+    delete data.sign_type
+
+    const dataString = preProcess(data)
+
+    const result = crypto.createVerify('sha256')
+      .update(dataString)
+      .verify(aliPayPublicKey, sign, 'base64')
+
+    return result
+  }
+
   aliPayRequestUrl (requestParams, sign) {
     const gateway = Config.get('alipay.api.gateway')
 
@@ -140,6 +155,15 @@ class CheckoutController {
   aliPayNotify ({ request }) {
     const paymentNotification = request.all()
     logger.debug('支付结果通知：', paymentNotification)
+
+    const signVerified = this.aliPayVerifySign(paymentNotification)
+    logger.debug('验证签名的结果：', signVerified)
+
+    if (!signVerified) {
+      return 'failure'
+    }
+
+    return 'success'
   }
 
   /**
@@ -165,7 +189,7 @@ class CheckoutController {
   async render ({ view, request }) {
     const returnUrlData = request.all()
     logger.debug('返回地址上的数据：', returnUrlData)
-    
+
     /**
      * 渲染结账页面视图。
      */
