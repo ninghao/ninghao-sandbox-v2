@@ -12,10 +12,48 @@ const axios        = use('axios')
  * 结账控制器。
  */
 class CheckoutController {
+  aliPayCommonParams (method) {
+    const app_id = Config.get('alipay.app_id')
+    const charset = 'utf-8'
+    const sign_type = 'RSA2'
+    const timestamp = moment().local().format('YYYY-MM-DD HH:mm:ss')
+    const version = '1.0'
+
+    const notify_url = Config.get('alipay.notify_url')
+    const return_url = Config.get('alipay.return_url')
+
+    let commonParams = {
+      app_id,
+      charset,
+      sign_type,
+      timestamp,
+      version,
+      method
+    }
+
+    switch (method) {
+      case 'alipay.trade.page.pay':
+        commonParams = {
+          ...commonParams,
+          notify_url,
+          return_url
+        }
+        break
+    }
+
+    return commonParams
+  }
+
   /**
    * 支付。
    */
   async pay () {
+    /**
+     * 公共参数
+     */
+    const commonParams = this.aliPayCommonParams('alipay.trade.page.pay')
+    logger.debug('公共参数：', commonParams)
+
     return '请求支付'
   }
 
