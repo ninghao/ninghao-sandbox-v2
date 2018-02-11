@@ -12,6 +12,37 @@ const axios        = use('axios')
  * 结账控制器。
  */
 class CheckoutController {
+  aliPayPreSign (data) {
+    const sortedData = Object.keys(data).sort().reduce((accumulator, key) => {
+      const itemValue = data[key].trim()
+
+      if (!itemValue) {
+        return accumulator
+      }
+
+      accumulator[key] = itemValue
+
+      return accumulator
+    }, {})
+
+    const dataString = queryString.stringify(sortedData, null, null, {
+      encodeURIComponent: queryString.unescape
+    })
+
+    return dataString
+  }
+
+  aliPaySign (data, preProcess = this.aliPayPreSign) {
+    const privateKey = Config.get('alipay.privateKey')
+    const dataString = preProcess(data)
+
+    const sign = crypto.createSign('sha256')
+      .update(dataString)
+      .sign(privateKey, 'base64')
+
+    return sign
+  }
+
   aliPayCommonParams (method) {
     const app_id = Config.get('alipay.app_id')
     const charset = 'utf-8'
@@ -75,6 +106,12 @@ class CheckoutController {
     }
 
     logger.debug('请求参数：', requestParams)
+
+    /**
+     * 签名
+     */
+    const sign = this.aliPaySign(requestParams)
+    logger.debug('签名：', sign)
 
     return '请求支付'
   }
