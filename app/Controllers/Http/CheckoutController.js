@@ -178,7 +178,33 @@ class CheckoutController {
    * 查询。
    */
   async query ({ session }) {
+    const commonParams = this.aliPayCommonParams('alipay.trade.query')
+    const trade_no = session.get('trade_no')
+    const biz_content = JSON.stringify({
+      trade_no
+    })
 
+    const requestParams = {
+      ...commonParams,
+      biz_content
+    }
+    const sign = this.aliPaySign(requestParams)
+
+    const requestUrl = this.aliPayRequestUrl(requestParams, sign)
+
+    const _response = await axios.post(requestUrl)
+    logger.debug('交易查询结果：', _response.data)
+    const aliPayTradeQueryResponse = _response.data.alipay_trade_query_response
+
+    if (aliPayTradeQueryResponse.code === '10000') {
+      switch (aliPayTradeQueryResponse.trade_status) {
+        case 'TRADE_SUCCESS':
+          return 'success'
+          break
+      }
+    }
+
+    return 'failure'
   }
 
   /**
@@ -194,9 +220,15 @@ class CheckoutController {
   /**
    * 结账页面。
    */
-  async render ({ view, request }) {
+  async render ({ view, request, session }) {
     const returnUrlData = request.all()
     logger.debug('返回地址上的数据：', returnUrlData)
+
+    const trade_no = request.input('trade_no')
+
+    if (trade_no) {
+      session.put('trade_no', trade_no)
+    }
 
     /**
      * 渲染结账页面视图。

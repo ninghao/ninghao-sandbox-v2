@@ -54,6 +54,9 @@
       },
       success: (response) => {
         console.log(response)
+        if (response === 'success') {
+          window.location.href = '/checkout/completed'
+        }
       },
       error: (error) => {
         console.log(error)
