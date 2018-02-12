@@ -7,6 +7,7 @@ const randomString = use('randomstring')
 const queryString  = use('querystring')
 const crypto       = use('crypto')
 const axios        = use('axios')
+const useragent    = use('useragent')
 
 /**
  * 结账控制器。
@@ -92,6 +93,7 @@ class CheckoutController {
 
     switch (method) {
       case 'alipay.trade.page.pay':
+      case 'alipay.trade.wap.pay':
         commonParams = {
           ...commonParams,
           notify_url,
@@ -106,18 +108,24 @@ class CheckoutController {
   /**
    * 支付。
    */
-  async pay () {
+  async pay ({ request }) {
+    const userBrowser = useragent.is(request.header('user-agent'))
+    logger.debug('userBrowser: ', userBrowser)
+    const method = (userBrowser.mobile_safari || userBrowser.android) ?
+      'alipay.trade.wap.pay' : 'alipay.trade.page.pay'
+
     /**
      * 公共参数
      */
-    const commonParams = this.aliPayCommonParams('alipay.trade.page.pay')
+    const commonParams = this.aliPayCommonParams(method)
     logger.debug('公共参数：', commonParams)
 
     /**
      * 请求参数
      */
     const out_trade_no = moment().local().format('YYYYMMDDHHmmss')
-    const product_code = 'FAST_INSTANT_TRADE_PAY'
+    const product_code = (userBrowser.mobile_safari || userBrowser.android) ?
+      'QUICK_WAP_WAY' : 'FAST_INSTANT_TRADE_PAY'
     const total_amount = '0.03'
     const subject = 'ninghao'
 

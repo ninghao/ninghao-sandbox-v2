@@ -31,6 +31,7 @@
     "moment": "^2.20.1",
     "qrcode": "^1.2.0",
     "randomstring": "^1.1.5",
+    "useragent": "^2.3.0",
     "xml-js": "^1.6.2"
   },
   "devDependencies": {},
